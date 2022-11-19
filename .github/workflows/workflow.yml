@@ -1,0 +1,79 @@
+name: Build release
+
+on:
+  # schedule:
+  #   - cron: '0 */1 * * *'
+  push:
+  workflow_dispatch:
+
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+    - name: Download artifact from build
+      uses: bettermarks/action-artifact-download@0.3.0
+      with:
+        repo: legleux/clio
+        token: ${{ secrets.GITHUB_TOKEN }}
+        artifact_name: clio_deb_packages
+        # rename: new-artifact-name
+        # wait_seconds: 60
+
+# jobs:
+#   check:
+#     runs-on: ubuntu-latest
+#     outputs:
+#       release_needed: ${{ steps.check.outputs.release_needed }}
+#     steps:
+#       - name: Checkout
+#         uses: actions/checkout@v2
+
+#       - name: Check if release needed
+#         id: check
+#         run: |
+#           RELEASE_NEEDED=$(python amm_update.py check_release_needed)
+#           echo "::set-output name=release_needed::${RELEASE_NEEDED}"
+
+#   build:
+#     runs-on: self-hosted
+#     needs: check
+#     if: needs.check.outputs.release_needed == 'true'
+#     steps:
+
+#       - name: Checkout
+#         uses: actions/checkout@v2
+
+#       - name: Build
+#         id: build
+#         run: |
+#           git clone --branch "amm-core-functionality" "https://github.com/gregtatcam/rippled.git"
+#           # git clone --branch "main" "https://github.com/legleux/am_test.git" rippled
+#           cd rippled
+#           git config --global --add safe.directory $PWD
+#           GIT_REV=$(git rev-parse --short HEAD)
+#           echo "::set-output name=sha_short::${GIT_REV}"
+#           TIME=$(date +"%Y-%m-%d-%H_%M_%S")
+#           echo "::set-output name=release_time::${TIME}"
+#           echo "::set-output name=tag_name::version_${TIME}-${GIT_REV}"
+
+#           echo ${{ steps.vars.outputs.sha_short }}
+#           echo ${{ steps.vars.outputs.release_time }}
+#           echo ${{ steps.vars.outputs.tag_name }}
+
+#           docker run -u $(id -u):$(id -g) -v $PWD:/rippled legleux/amm-builder
+#           tar czvf rippled.tar.gz -C build rippled
+
+#       - uses: avakar/tag-and-release@v1
+#         with:
+#           tag_name: ${{ steps.build.outputs.tag_name }}
+#         env:
+#           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+#       - name: Release
+#         uses: softprops/action-gh-release@v1
+#         with:
+#           name: "Version ${{ steps.build.outputs.sha_short }}"
+#           tag_name: ${{ steps.build.outputs.tag_name }}
+#           files: rippled/rippled.tar.gz
