@@ -22,6 +22,7 @@ jobs:
         id: check
         run: |
           RELEASE_NEEDED=$(python main.py)
+          echo ${RELEASE_NEEDED}
           echo "release_needed=${RELEASE_NEEDED}" >> $GITHUB_OUTPUT
 
   make_release:
