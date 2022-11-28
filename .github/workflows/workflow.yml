@@ -51,6 +51,8 @@ jobs:
         run: |
           pip install requests
           python get_artifact.py $(cat git_rev)
+          ls -lah
+          echo $PWD
 
       - name: Git rev
         id: git_rev
@@ -68,8 +70,8 @@ jobs:
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
-          name: "Version ${{ steps.git_rev.outputs.git_rev }}"
-          tag_name: ${{ steps.git_rev.outputs.git_rev }}
+          name: "Version ${{ steps.git_rev.outputs.short_rev }}"
+          tag_name: ${{ steps.git_rev.outputs.short_rev }}
           files:
             ${{ github.workspace }}/*.deb
             ${{ github.workspace }}/*.rpm
