@@ -52,15 +52,22 @@ jobs:
           pip install requests
           python get_artifact.py $(cat git_rev)
 
-      # - uses: avakar/tag-and-release@v1
-      #   with:
-      #     tag_name: ${{ steps.build.outputs.tag_name }}
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Git rev
+        id: git_rev
+        run: |
+          echo "git_rev=$(cat git_rev)" >> $GITHUB_OUTPUT
 
-      # - name: Release
-      #   uses: softprops/action-gh-release@v1
-      #   with:
-      #     name: "Version ${{ steps.build.outputs.sha_short }}"
-      #     tag_name: ${{ steps.build.outputs.tag_name }}
-      #     files: rippled/rippled.tar.gz
+      - uses: avakar/tag-and-release@v1
+        with:
+          tag_name: ${{ steps.git_rev.outputs.git_rev }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          name: "Version ${{ steps.git_rev.outputs.git_rev }}"
+          tag_name: ${{ steps.git_rev.outputs.git_rev }}
+          files:
+            ${{ github.workspace }}/*.deb
+            ${{ github.workspace }}/*.rpm
