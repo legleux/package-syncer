@@ -19,7 +19,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Check if release needed
-        id: check
+        id: release_needed
         run: |
           pip install python-dotenv
           RELEASE_NEEDED=$(python main.py)
