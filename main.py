@@ -1,6 +1,5 @@
 # get head commits of branches
 from check_gh_latest_commits import get_branch_sha, get_hash_from_tag
-from get_artifact import get_artifacts
 from check_releases import get_releases
 
 # get latest commits from source repo, "clio"

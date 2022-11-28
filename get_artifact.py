@@ -9,7 +9,7 @@ import sys
 OWNER = "legleux"
 REPO = "test_repo"
 URL = f"https://api.github.com/repos/{OWNER}/{REPO}/actions/artifacts"
-TOKEN = print(os.environ['PAT_TOKEN'])
+TOKEN = os.environ['PAT_TOKEN']
 headers = {
     "Accept": "application/vnd.github+json",
     "Authorization": f"Bearer {TOKEN}"
