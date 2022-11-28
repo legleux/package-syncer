@@ -55,11 +55,13 @@ jobs:
       - name: Git rev
         id: git_rev
         run: |
-          echo "git_rev=$(cat git_rev)" >> $GITHUB_OUTPUT
+          git_rev=$(cat git_rev)
+          echo "git_rev=${git_rev}" >> $GITHUB_OUTPUT
+          echo "short_rev=${git_rev:0:8}" >> $GITHUB_OUTPUT
 
       - uses: avakar/tag-and-release@v1
         with:
-          tag_name: ${{ steps.git_rev.outputs.git_rev }}
+          tag_name: ${{ steps.git_rev.outputs.short_rev }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
