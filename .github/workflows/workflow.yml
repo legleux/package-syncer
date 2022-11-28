@@ -22,13 +22,15 @@ jobs:
         id: check
         run: |
           RELEASE_NEEDED=$(python main.py)
-          echo ${RELEASE_NEEDED} > git_rev.txt
+          echo ${RELEASE_NEEDED} > git_rev
           echo "release_needed=${RELEASE_NEEDED}" >> $GITHUB_OUTPUT
-      - name: Artifact packages
+
+      - name: Save git rev
         uses: actions/upload-artifact@v3
         with:
           name: git_rev
-          path: ${{ github.workspace }}/git_rev.txt
+          path: ${{ github.workspace }}/git_rev
+
   make_release:
     runs-on: ubuntu-latest
     needs: release_needed
@@ -43,12 +45,12 @@ jobs:
       - name: Get clio_tests artifact
         uses: actions/download-artifact@v3
         with:
-          name: git_reve.txt
+          name: git_rev
 
       - name: Get latest artifact
         run: |
           pip install requests
-          python get_artifact.py $(cat git_rev.txt)
+          python get_artifact.py $(cat git_rev)
 
       # - uses: avakar/tag-and-release@v1
       #   with:
