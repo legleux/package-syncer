@@ -26,7 +26,7 @@ jobs:
           echo "release_needed=${RELEASE_NEEDED}" >> $GITHUB_OUTPUT
 
   make_release:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     needs: release_needed
     if: needs.release_needed.outputs.release_needed != 'false'
     steps:
