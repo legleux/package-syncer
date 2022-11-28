@@ -24,7 +24,11 @@ jobs:
           RELEASE_NEEDED=$(python main.py)
           echo ${RELEASE_NEEDED} > git_rev.txt
           echo "release_needed=${RELEASE_NEEDED}" >> $GITHUB_OUTPUT
-
+      - name: Artifact packages
+        uses: actions/upload-artifact@v3
+        with:
+          name: git_rev
+          path: ${{ github.workspace }}/git_rev.txt
   make_release:
     runs-on: ubuntu-latest
     needs: release_needed
@@ -35,6 +39,11 @@ jobs:
 
       - name: Checkout
         uses: actions/checkout@v2
+
+      - name: Get clio_tests artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: git_reve.txt
 
       - name: Get latest artifact
         run: |
