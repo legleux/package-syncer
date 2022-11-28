@@ -49,10 +49,8 @@ jobs:
 
       - name: Get latest artifact
         run: |
-          pip install requests
+          pip install requests python-dotenv
           python get_artifact.py $(cat git_rev)
-          ls -lah
-          echo $PWD
 
       - name: Git rev
         id: git_rev
