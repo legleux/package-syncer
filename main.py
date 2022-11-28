@@ -19,7 +19,7 @@ def check_if_release_needed(repo=REPO, git_rev=None):
     released_shas = [ sha[1] for sha in releases if len(sha.split('-')) > 1]
     for commit in latest_commits:
         if not commit in released_shas:
-            print(f"Need to release: {commit}")
+            # print(f"Need to release: {commit}")
             print(commit[1])
             return commit[1]
         else:
