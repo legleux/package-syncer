@@ -36,7 +36,7 @@ jobs:
 
       - name: Get latest artifact
         run: |
-          pip import requests
+          pip install requests
           python get_artifact.py ${{ steps.release_needed.outputs.release_needed }}
 
       # - uses: avakar/tag-and-release@v1
