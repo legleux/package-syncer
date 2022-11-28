@@ -3,13 +3,18 @@ import json
 import subprocess as sp
 import os
 import sys
-
+from dotenv import dotenv_values
 # OWNER = "XRPLF"
 # REPO = "clio"
 OWNER = "legleux"
 REPO = "test_repo"
 URL = f"https://api.github.com/repos/{OWNER}/{REPO}/actions/artifacts"
-TOKEN = os.environ['PAT_TOKEN']
+
+if os.environ.get('CI'):
+  TOKEN = os.environ['PAT_TOKEN']
+else:
+  TOKEN = dotenv_values().get('PAT_TOKEN')
+
 headers = {
     "Accept": "application/vnd.github+json",
     "Authorization": f"Bearer {TOKEN}"
