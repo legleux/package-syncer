@@ -16,8 +16,12 @@ def check_if_release_needed(repo=REPO, git_rev=None):
     #     print(release['published_at'])
 
     releases = [ release['tag_name'] for release in releases ]
-    released_shas = [ sha[1] for sha in releases if len(sha.split('-')) > 1]
+    # released_shas = [ sha[1] for sha in releases if len(sha.split('-')) > 1]
+    # TODO: figure out what to name releases
+    released_shas = [ sha for sha in releases]
     for commit in latest_commits:
+        commit = commit[1][:8]
+        breakpoint()
         if not commit in released_shas:
             # print(f"Need to release: {commit}")
             print(commit[1])
