@@ -21,7 +21,7 @@ def check_if_release_needed(repo=REPO, git_rev=None):
         if not commit in released_shas:
             print(f"Need to release: {commit}")
             print(commit)
-            return commit
+            return commit[1]
         else:
             print("false")
             return False

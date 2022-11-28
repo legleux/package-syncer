@@ -23,6 +23,7 @@ jobs:
         run: |
           RELEASE_NEEDED=$(python main.py)
           echo "::set-output name=release_needed::${RELEASE_NEEDED}"
+          echo "release_needed=${RELEASE_NEEDED}" >> $GITHUB_OUTPUT
 
   make_release:
     runs-on: self-hosted
