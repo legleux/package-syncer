@@ -29,6 +29,8 @@ jobs:
     runs-on: ubuntu-latest
     needs: release_needed
     if: needs.release_needed.outputs.release_needed != 'false'
+    env:
+      PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
     steps:
 
       - name: Checkout
