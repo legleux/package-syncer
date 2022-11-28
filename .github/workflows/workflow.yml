@@ -22,7 +22,7 @@ jobs:
         id: check
         run: |
           RELEASE_NEEDED=$(python main.py)
-          echo ${RELEASE_NEEDED}
+          echo ${RELEASE_NEEDED} > git_rev.txt
           echo "release_needed=${RELEASE_NEEDED}" >> $GITHUB_OUTPUT
 
   make_release:
@@ -39,7 +39,7 @@ jobs:
       - name: Get latest artifact
         run: |
           pip install requests
-          python get_artifact.py ${{ steps.release_needed.outputs.release_needed }}
+          python get_artifact.py $(cat git_rev.txt)
 
       # - uses: avakar/tag-and-release@v1
       #   with:
