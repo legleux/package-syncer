@@ -72,6 +72,6 @@ jobs:
         with:
           name: "Version ${{ steps.git_rev.outputs.short_rev }}"
           tag_name: ${{ steps.git_rev.outputs.short_rev }}
-          files:
+          files: |
             ${{ github.workspace }}/*.deb
             ${{ github.workspace }}/*.rpm
