@@ -21,6 +21,7 @@ jobs:
       - name: Check if release needed
         id: check
         run: |
+          pip install python-dotenv
           RELEASE_NEEDED=$(python main.py)
           echo ${RELEASE_NEEDED} > git_rev
           echo "release_needed=${RELEASE_NEEDED}" >> $GITHUB_OUTPUT
