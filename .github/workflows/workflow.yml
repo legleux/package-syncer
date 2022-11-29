@@ -72,7 +72,8 @@ jobs:
           pip install requests python-dotenv
           GIT_REV=${{ steps.git_rev.outputs.git_rev }}
           SHORT_REV=${{ steps.git_rev.outputs.short_rev }}
-          python get_artifact.py $GIT_REV
+          BRANCH=${{ steps.git_rev.outputs.branch }}
+          python get_artifact.py "${GIT_REV}" "${BRANCH}"
 
 
       - uses: avakar/tag-and-release@v1
