@@ -56,7 +56,7 @@ jobs:
         run: |
           git_rev=$(cat git_rev)
           echo "git_rev contains: ${git_rev}"
-          IFS=- read -r branch git_rev <<< $git_rev
+          IFS=_ read -r branch git_rev <<< $git_rev
           short_rev=${git_rev:0:8}
           echo "branch: ${branch}"
           echo "git_rev: ${git_rev}"
