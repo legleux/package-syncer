@@ -12,13 +12,14 @@ def check_releases_needed(repo=SOURCE_REPO, git_rev=None):
 
     for latest_commit in source_repo_latest_commits:
         branch, git_rev = latest_commit
-        short_release_tag = f"{branch}_{git_rev[1][:8]}"
-
-        if short_release_tag not in released_tags:
-            # log print(f"need a release for {latest_commit[0]} -- {release_tag}")
+        release_tag = f"{branch}_{git_rev[:8]}"
+        if release_tag not in released_tags:
+            # log this somehow write a file and read it to markdown for display in github?
+            # print(f"need a release for {latest_commit[0]} -- {release_tag}")
             print(f"{branch}-{git_rev}")
             exit()
         else:
+            # print(f"Found a release for {latest_commit[0]} -- {release_tag}")
             print("false")
             return False
 
