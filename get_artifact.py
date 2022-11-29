@@ -29,9 +29,10 @@ def get_artifacts():
   r = get(dl_url, headers=headers, allow_redirects=True)
   return resp['artifacts']
 
-def get_latest_artifact_urls(git_rev):
+def get_latest_artifact_urls(git_rev, branch):
   artifacts = get_artifacts()
-  a = [ a for a in artifacts if a['workflow_run']['head_sha'] == git_rev]
+
+  a = [ a for a in artifacts if a['workflow_run']['head_sha'] == git_rev and a['workflow_run']['head_branch'] == branch]
   # breakpoint()
   for i in a:
     print(i['archive_download_url'])
@@ -52,6 +53,7 @@ def download_artifact(artifact_json):
     # print(sha)
 
 git_rev = sys.argv[1]
-artifacts = get_latest_artifact_urls(git_rev)
+branch = sys.argv[2]
+artifacts = get_latest_artifact_urls(git_rev, branch)
 for art in artifacts:
   download_artifact(art)
