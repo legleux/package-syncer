@@ -16,14 +16,20 @@ def get_hash_from_tag(tag):
     url = TAGS_URL + f"/{tag}"
     response = requests.get(url)
     resp = json.loads(response.content)
-    breakpoint()
-    return resp['object']['sha']
+    try:
+        sha = resp['object']['sha']
+        return sha
+    except Exception as e:
+        if resp:
+            print(resp)
+            print(f"Couldn't find tag: {tag}")
+            breakpoint()
+            print(str(e))
 
-def get_branch_sha():
+def get_last_commits_from_target_branches():
     response = requests.get(BRANCHES_URL)
     res = response.content
     branches = json.loads(res)
     branches = [branch for branch in branches if branch['name'] in ['develop', 'main'] or branch['name'].startswith('release')]
-# print(branches)
     shas = [(branch['name'], branch['commit']['sha']) for branch in branches]
     return shas
