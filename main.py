@@ -11,10 +11,12 @@ def check_releases_needed(repo=SOURCE_REPO, git_rev=None):
     released_tags = [ release['tag_name'] for release in releases ]
 
     for latest_commit in source_repo_latest_commits:
-        release_tag = f"{latest_commit[0]}-{latest_commit[1][:8]}"
-        if release_tag not in released_tags:
+        branch, git_rev = latest_commit
+        short_release_tag = f"{branch}-{git_rev[1][:8]}"
+
+        if short_release_tag not in released_tags:
             # log print(f"need a release for {latest_commit[0]} -- {release_tag}")
-            print(release_tag)
+            print(f"{branch}-{git_rev}")
             exit()
         else:
             print("false")

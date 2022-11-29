@@ -43,34 +43,40 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Get clio_tests artifact
+      - name: Get git_rev file
         uses: actions/download-artifact@v3
         with:
           name: git_rev
-
-      - name: Get latest artifact
-        run: |
-          pip install requests python-dotenv
-          python get_artifact.py $(cat git_rev)
 
       - name: Git rev
         id: git_rev
         run: |
           git_rev=$(cat git_rev)
+          IFS=- read -r branch git_rev <<< $git_rev
+          echo "branch=${branch}" >> $GITHUB_OUTPUT
           echo "git_rev=${git_rev}" >> $GITHUB_OUTPUT
           echo "short_rev=${git_rev:0:8}" >> $GITHUB_OUTPUT
+          echo "tag_name=${branch}-${short_rev}" >> $GITHUB_OUTPUT
+
+      - name: Get latest artifact
+        run: |
+          pip install requests python-dotenv
+          GIT_REV=${{ steps.git_rev.outputs.git_rev }}
+          SHORT_REV=${{ steps.git_rev.outputs.short_rev }}
+          python get_artifact.py $GIT_REV
+
 
       - uses: avakar/tag-and-release@v1
         with:
-          tag_name: ${{ steps.git_rev.outputs.short_rev }}
+          tag_name: ${{ steps.git_rev.outputs.tag_name }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
-          name: "Version ${{ steps.git_rev.outputs.short_rev }}"
-          tag_name: ${{ steps.git_rev.outputs.short_rev }}
+          name: "Release ${{ steps.git_rev.outputs.tag_name }}"
+          tag_name: ${{ steps.git_rev.outputs.tag_name }}
           files: |
             ${{ github.workspace }}/*.deb
             ${{ github.workspace }}/*.rpm
