@@ -9,6 +9,7 @@ on:
 
 jobs:
   release_needed:
+    name: Check if need to release
     runs-on: ubuntu-latest
     outputs:
       release_needed: ${{ steps.release_needed.outputs.release_needed }}
@@ -34,6 +35,7 @@ jobs:
           path: ${{ github.workspace }}/git_rev
 
   make_release:
+    name: Create release
     runs-on: ubuntu-latest
     needs: release_needed
     if: needs.release_needed.outputs.release_needed != 'false'
