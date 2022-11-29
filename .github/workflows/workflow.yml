@@ -1,4 +1,4 @@
-name: Build release
+name: Build release if needed
 
 on:
   # schedule:
@@ -25,7 +25,7 @@ jobs:
           RELEASE_NEEDED=$(python main.py)
           echo ${RELEASE_NEEDED} > git_rev
           echo "release_needed=${RELEASE_NEEDED}" >> $GITHUB_OUTPUT
-          echo ${RELEASE_NEEDED}
+          echo "Need to release: ${RELEASE_NEEDED}"
 
       - name: Save git rev
         uses: actions/upload-artifact@v3
@@ -49,16 +49,20 @@ jobs:
         with:
           name: git_rev
 
-      - name: Git rev
+      - name: Set variables git rev, branch name
         id: git_rev
         run: |
           git_rev=$(cat git_rev)
+          echo "git_rev contains: ${git_rev}"
           IFS=- read -r branch git_rev <<< $git_rev
+          echo "branch: ${branch}"
+          echo "git_rev: ${git_rev}"
           echo "branch=${branch}" >> $GITHUB_OUTPUT
           echo "git_rev=${git_rev}" >> $GITHUB_OUTPUT
           echo "short_rev=${git_rev:0:8}" >> $GITHUB_OUTPUT
           echo "tag_name=${branch}_${short_rev}" >> $GITHUB_OUTPUT
-          echo "GITHUB_OUTPUT: ${GITHUB_OUTPUT}"
+          output=$(cat ${GITHUB_OUTPUT})
+          echo "GITHUB_OUTPUT: ${output}"
 
       - name: Get latest artifact
         run: |
