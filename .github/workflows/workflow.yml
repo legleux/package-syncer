@@ -25,6 +25,7 @@ jobs:
           RELEASE_NEEDED=$(python main.py)
           echo ${RELEASE_NEEDED} > git_rev
           echo "release_needed=${RELEASE_NEEDED}" >> $GITHUB_OUTPUT
+          echo ${RELEASE_NEEDED}
 
       - name: Save git rev
         uses: actions/upload-artifact@v3
@@ -56,7 +57,8 @@ jobs:
           echo "branch=${branch}" >> $GITHUB_OUTPUT
           echo "git_rev=${git_rev}" >> $GITHUB_OUTPUT
           echo "short_rev=${git_rev:0:8}" >> $GITHUB_OUTPUT
-          echo "tag_name=${branch}-${short_rev}" >> $GITHUB_OUTPUT
+          echo "tag_name=${branch}_${short_rev}" >> $GITHUB_OUTPUT
+          echo "GITHUB_OUTPUT: ${GITHUB_OUTPUT}"
 
       - name: Get latest artifact
         run: |
