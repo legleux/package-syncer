@@ -1,15 +1,16 @@
 # get head commits of branches
 from check_gh_latest_commits import get_last_commits_from_target_branches, get_hash_from_tag
-from check_releases import get_releases
+from check_releases import get_gh_releases
 
 SOURCE_REPO = "legleux/package-syncer"
 
 def check_releases_needed(repo=SOURCE_REPO, git_rev=None):
 
     source_repo_latest_commits = get_last_commits_from_target_branches()
-    releases = get_releases(repo)
+    releases = get_gh_releases(repo)
     released_tags = [ release['tag_name'] for release in releases ]
     releases_found = []
+
     for latest_commit in source_repo_latest_commits:
         branch, git_rev = latest_commit
         full_release_tag = f"{branch}_{git_rev}"
