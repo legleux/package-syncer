@@ -69,5 +69,4 @@ for art in artifacts:
   pkg_shas.append(download_artifact(art))
 
 for info in pkg_shas:
-  print(f"File: {info[0]}\sha256: {info[1]}")
-  print("----")
+  print(f"File: {info[0]}\nsha256: {info[1]}")
