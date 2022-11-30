@@ -73,7 +73,7 @@ jobs:
           GIT_REV=${{ steps.git_rev.outputs.git_rev }}
           SHORT_REV=${{ steps.git_rev.outputs.short_rev }}
           BRANCH=${{ steps.git_rev.outputs.branch }}
-          python get_artifact.py "${GIT_REV}" "${BRANCH}"
+          python get_artifact.py "${GIT_REV}" "${BRANCH}" >> $GITHUB_STEP_SUMMARY
 
 
       - uses: avakar/tag-and-release@v1
