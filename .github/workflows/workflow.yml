@@ -21,7 +21,7 @@ jobs:
 
       - name: Make commit
         run: |
-          git commit --allow-empty -m"${{ steps.git_rev.outputs.tag_name }}"
+          git commit --allow-empty -m"neat ${{ steps.git_rev.outputs.tag_name }}"
           git push
       - name: Check if release needed
         id: release_needed
