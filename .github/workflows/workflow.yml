@@ -19,12 +19,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Make commit
-        run: |
-          git config --global user.email "auto@bot.com"
-          git config --global user.name "Hot Rod"
-          git commit --allow-empty -m"neat ${{ steps.git_rev.outputs.tag_name }}"
-          git push
       - name: Check if release needed
         id: release_needed
         run: |
@@ -81,8 +75,15 @@ jobs:
           BRANCH=${{ steps.git_rev.outputs.branch }}
           python get_artifact.py "${GIT_REV}" "${BRANCH}" >> $GITHUB_STEP_SUMMARY
 
+      - name: Make commit
+        run: |
+          git config --global user.email "auto@bot.com"
+          git config --global user.name "Hot Rod"
+          git commit --allow-empty -m"${{ steps.git_rev.outputs.branch }}-${{ steps.git_rev.outputs.tag_name }}"
+          git push
 
-      - uses: avakar/tag-and-release@v1
+      - name: Tag
+        uses: avakar/tag-and-release@v1
         with:
           tag_name: ${{ steps.git_rev.outputs.tag_name }}
         env:
@@ -96,7 +97,3 @@ jobs:
           files: |
             ${{ github.workspace }}/*.deb
             ${{ github.workspace }}/*.rpm
-
-      # - name: Make commit
-      #   run: |
-      #     git commit --allow-empty -m"${{ steps.git_rev.outputs.tag_name }}"
