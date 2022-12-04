@@ -23,7 +23,6 @@ def check_releases_needed(repo=TARGET_REPO, git_rev=None, gh=False, print_all=Fa
         else:
             pass
             # print(f"Found a release for {latest_commit[0]} -- {release_tag}")
-    breakpoint()
     if not releases_found:
         print("false")
     else:
