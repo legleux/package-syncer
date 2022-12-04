@@ -49,7 +49,10 @@ def get_latest_artifact_urls(package, git_rev, branch, page=1):
   pkg_names = [f"clio_{pkg_type}_packages" for pkg_type in ['rpm', 'deb']]
   no_pkg_found = True
   page = 1
-  while(no_pkg_found):
+  last_page = 10
+  last_workflow_run = None
+  while(no_pkg_found and page != last_page):
+    log.debug(f"Checking page: {page}")
     all_artifacts = get_artifacts(URL, page=page)
     # breakpoint()
     artifacts = [artifact for artifact in all_artifacts if artifact['name'] in pkg_names ]
@@ -60,12 +63,7 @@ def get_latest_artifact_urls(package, git_rev, branch, page=1):
       last_workflow_run = [wf for wf in artifacts_from_branch if wf['workflow_run']['id'] == last_workflow_id]
       no_pkg_found = False
     page += 1
-
   return last_workflow_run
-
-  # for i in a:
-  #   print(i['archive_download_url'])
-
 
 def download_artifact(artifact_json):
     dl_url = artifact_json['archive_download_url']
