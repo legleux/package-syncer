@@ -7,7 +7,7 @@ from logger import log
 from dotenv import dotenv_values
 # OWNER = "XRPLF"
 # REPO = "clio"
-OWNER = "legleux"
+OWNER = "XRPLF"
 REPO = "clio"
 URL = f"https://api.github.com/repos/{OWNER}/{REPO}/actions/artifacts?per_page=100"
 
