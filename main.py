@@ -2,17 +2,17 @@
 from check_gh_latest_commits import get_last_commits_from_target_branches, get_hash_from_tag
 from check_releases import get_gh_releases
 
-SOURCE_REPO = "legleux/package-syncer"
+TARGET_REPO = "legleux/package-syncer"
 
-def check_releases_needed(repo=SOURCE_REPO, git_rev=None):
+def check_releases_needed(repo=TARGET_REPO, git_rev=None, gh=False):
 
-    source_repo_latest_commits = get_last_commits_from_target_branches()
+    target_repo_latest_commits = get_last_commits_from_target_branches()
     releases = get_gh_releases(repo)
     # breakpoint()
     released_tags = [ release['tag_name'] for release in releases ]
     releases_found = []
 
-    for latest_commit in source_repo_latest_commits:
+    for latest_commit in target_repo_latest_commits:
         branch, git_rev = latest_commit
         full_release_tag = f"{branch}_{git_rev}"
         release_tag = f"{branch}_{git_rev[:8]}"
@@ -27,7 +27,22 @@ def check_releases_needed(repo=SOURCE_REPO, git_rev=None):
     if not releases_found:
         print("false")
     else:
-        print(releases_found) # log this
-        # print(releases_found[0])
+        if(gh):
+            print(releases_found[0])
+        else:
+            print(releases_found) # log this
+            return releases_found
 
-check_releases_needed()
+if __name__ == "__main__":
+    check_releases_needed(gh=True)
+
+# Check which branches in <source_repo> do not have releases in <target_repo>:
+
+# releases_needed = check_releases_needed()
+# x = [pair for pair in [pair.split('_') for pair in releases_needed]]
+# # flatten
+# # # get the latest assets built from these branches/commits available from the source_repo:
+# x = [ i for sub in x for i in sub]
+# for branch, git_rev in zip(x[::2], x[1::2]):
+# # for branch, git_rev in zip(x[0::1],x[1::]):
+#     print(f"branch: {branch} git_rev: {git_rev}")
