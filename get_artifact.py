@@ -101,7 +101,7 @@ if __name__ == "__main__":
     # pkg_shas.append(download_artifact(art))
       download_artifact(art)
   else:
-  print(f"Couldn't find {package} built from {git_rev} in {branch} branch")
+    print(f"Couldn't find {package} built from {git_rev} in {branch} branch")
 
   # for info in pkg_shas:
   #   print(f"File: {info[0]}\nsha256: {info[1]}")

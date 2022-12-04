@@ -29,7 +29,7 @@ def check_releases_needed(repo=TARGET_REPO, git_rev=None, gh=False, print_all=Fa
     else:
         if(gh):
             if(print_all):
-                print(releases_found)
+                print("\n".join(releases_found))
             else:
                 print(releases_found[0])
         else:
