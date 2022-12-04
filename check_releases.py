@@ -19,6 +19,12 @@ def get_gh_releases(repo):
     releases = json.loads(get(url, headers=headers).content)
     return releases
 
+def get_workflows(repo):
+    url = f"https://api.github.com/repos/{repo}/actions/workflows"
+#           https://api.github.com/repos/OWNER/REPO/actions/workflows
+    workflows = json.loads(get(url, headers=headers).content)
+    return workflows
+
 headers = {"Accept": "application/vnd.github+json","Authorization": f"Bearer {TOKEN}"}
 
 def get_release_assets_sha(repo, release_tag, asset_name):

@@ -65,6 +65,7 @@ def get_latest_artifact_urls(package, git_rev, branch, page=1):
     page += 1
   return last_workflow_run
 
+
 def download_artifact(artifact_json):
     dl_url = artifact_json['archive_download_url']
     name =  artifact_json['name']
