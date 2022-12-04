@@ -30,7 +30,8 @@ jobs:
             msg="No Release needed..."
           else
             releases=$(python main.py True)
-            echo "Need to release: ${releases}" >> $GITHUB_STEP_SUMMARY
+            echo "Need to release:" >> $GITHUB_STEP_SUMMARY
+            echo "${releases}" >> $GITHUB_STEP_SUMMARY
             msg="Releasing: ${RELEASE_NEEDED}"
           fi
           echo $msg >> $GITHUB_STEP_SUMMARY

@@ -9,7 +9,7 @@ from dotenv import dotenv_values
 # REPO = "clio"
 OWNER = "XRPLF"
 REPO = "clio"
-URL = f"https://api.github.com/repos/{OWNER}/{REPO}/actions/artifacts?per_page=100"
+URL = f"https://api.github.com/repos/{OWNER}/{REPO}/actions/artifacts"
 
 if os.environ.get('GITHUB_ACTIONS'):
   TOKEN = os.environ['PAT_TOKEN']
@@ -21,35 +21,49 @@ headers = {
     "Authorization": f"Bearer {TOKEN}"
 }
 
-def get_artifacts(url=URL, num=0):
+def get_artifacts(url=URL, page=1):
+
   try:
-    resp = json.loads(get(url, headers=headers).content)
-  # breakpoint()
+    url=URL+f"?page={page}"
+    raw_response = get(url, headers=headers)
+    response = json.loads(raw_response.content)
   except Exception as e:
     log.error("Couldn't get all artifact URLs")
     log.error(e)
 
-  try:
-    artifacts = resp['artifacts'][num]
-  except KeyError as e:
-    log.error("Couldn't find any artifacts")
-    log.error(e)
-    # NOTE: pagination set to 100 in URL, hopefully that'll always be enough
-  # print(artifacts['workflow_run']['head_sha'])
-  dl_url = artifacts['archive_download_url']
-  wf_url = artifacts['url']
-  r = get(dl_url, headers=headers, allow_redirects=True)
-  return resp['artifacts']
+  # try:
+  #   breakpoint()
+  #   artifacts = response['artifacts'][0]
+  # except KeyError as e:
+  #   log.error("Couldn't find any artifacts")
+  #   log.error(e)
+  #   # NOTE: pagination set to 100 in URL, hopefully that'll always be enough
+  # # print(artifacts['workflow_run']['head_sha'])
+  # dl_url = artifacts['archive_download_url']
+  # wf_url = artifacts['url']
+  # r = get(dl_url, headers=headers, allow_redirects=True)
+  return response['artifacts']
 
 
-def get_latest_artifact_urls(package, git_rev, branch):
+def get_latest_artifact_urls(package, git_rev, branch, page=1):
   pkg_names = [f"clio_{pkg_type}_packages" for pkg_type in ['rpm', 'deb']]
-  found_pkg = False
-  all_artifacts = get_artifacts(URL, 0)
-  artifacts = [artifact for artifact in all_artifacts if artifact['name'] in pkg_names ]
-  # breakpoint()
-  a = [ a for a in artifacts if a['workflow_run']['head_sha'] == git_rev and a['workflow_run']['head_branch'] == branch]
-  return a
+  no_pkg_found = True
+  page = 1
+  while(no_pkg_found):
+    all_artifacts = get_artifacts(URL, page=page)
+    # breakpoint()
+    artifacts = [artifact for artifact in all_artifacts if artifact['name'] in pkg_names ]
+    artifacts_from_branch = [ a for a in artifacts if a['workflow_run']['head_sha'] == git_rev and a['workflow_run']['head_branch'] == branch]
+    # breakpoint()
+    if artifacts_from_branch:
+      # last_workflow = artifacts_from_branch[0]['workflow_run']['id']
+      # for artifact in artifacts_from_branch[0:]:
+      #   if artifact['workflow_run']['id'] != last_workflow:
+          # we're done
+      no_pkg_found = False
+    page += 1
+
+  return artifacts_from_branch
 
   # for i in a:
   #   print(i['archive_download_url'])
@@ -60,7 +74,7 @@ def download_artifact(artifact_json):
     name =  artifact_json['name']
     # breakpoint()
     # filename = name.split('-')[3]
-    log.debug(f"Downloading: {name} from {dl_url}")
+    log.debug(f"Trying to download: {name} from {dl_url}")
     r = get(dl_url, headers=headers, allow_redirects=True)
     zip_file = open(name, 'wb')
     zip_file.write(r.content)
@@ -79,6 +93,7 @@ def download_artifact(artifact_json):
     # return (artifact, sha)
     print(f"Downloaded: {artifact}\n")
 
+
 def get_artifact_shas(url):
   # this is wrong bc "get_artifacts" is only getting the latest artifacts
   artifacts = get_artifacts(url)
@@ -92,13 +107,15 @@ if __name__ == "__main__":
   package = sys.argv[1]
   git_rev = sys.argv[2]
   branch = sys.argv[3]
+  log.debug("Getting latest artifacts:") # for {package}, {git_rev}, {branch}")
+  log.debug(f"\tPackage: {package}")
+  log.debug(f"\tBranch: {branch}")
+  log.debug(f"\tGit ref: {git_rev}")
   artifacts = get_latest_artifact_urls(package, git_rev, branch)
   # breakpoint()
   pkg_shas = []
   if artifacts:
     for art in artifacts:
-    # pkg_shas.append(download_artifact(art))
-      log.debug("Downloading: ${art['name']}")
       download_artifact(art)
   else:
     print(f"Couldn't find {package} built from {git_rev} in {branch} branch")
