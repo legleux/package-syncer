@@ -35,10 +35,10 @@ jobs:
           name: git_rev
           path: ${{ github.workspace }}/git_rev
 
-      - name: Save git rev
+      - name: Report all needed
         if: steps.release_needed.outputs.release_needed != 'false'
         run: |
-          echo "git_rev: ${{ steps.release_needed.outputs.release_needed }}" >> $GITHUB_STEP_SUMMARY
+          echo "git_rev: $(python main.py True)" >> $GITHUB_STEP_SUMMARY
 
 
   make_release:

@@ -28,7 +28,7 @@ def check_releases_needed(repo=TARGET_REPO, git_rev=None, gh=False, print_all=Fa
         print("false")
     else:
         if(gh):
-            if(print_all)
+            if(print_all):
                 print(releases_found[0])
             else:
                 print(releases_found)
@@ -37,9 +37,10 @@ def check_releases_needed(repo=TARGET_REPO, git_rev=None, gh=False, print_all=Fa
             return releases_found
 
 if __name__ == "__main__":
+    print_all=False
     if len(sys.argv > 1):
         print_all = sys.argv[1] # TODO: argparse
-    check_releases_needed(gh=True, print_all=False)
+    check_releases_needed(gh=True, print_all=print_all)
 # Check which branches in <source_repo> do not have releases in <target_repo>:
 
 # releases_needed = check_releases_needed()
