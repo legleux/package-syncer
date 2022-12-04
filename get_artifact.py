@@ -54,16 +54,14 @@ def get_latest_artifact_urls(package, git_rev, branch, page=1):
     # breakpoint()
     artifacts = [artifact for artifact in all_artifacts if artifact['name'] in pkg_names ]
     artifacts_from_branch = [ a for a in artifacts if a['workflow_run']['head_sha'] == git_rev and a['workflow_run']['head_branch'] == branch]
-    # breakpoint()
     if artifacts_from_branch:
-      # last_workflow = artifacts_from_branch[0]['workflow_run']['id']
-      # for artifact in artifacts_from_branch[0:]:
-      #   if artifact['workflow_run']['id'] != last_workflow:
-          # we're done
+      # TODO: go back and get the last workflow somehow
+      last_workflow_id = artifacts_from_branch[0]['workflow_run']['id']
+      last_workflow_run = [wf for wf in artifacts_from_branch if wf['workflow_run']['id'] == last_workflow_id]
       no_pkg_found = False
     page += 1
 
-  return artifacts_from_branch
+  return last_workflow_run
 
   # for i in a:
   #   print(i['archive_download_url'])
