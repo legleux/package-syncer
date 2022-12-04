@@ -26,7 +26,14 @@ jobs:
           RELEASE_NEEDED=$(python main.py)
           echo ${RELEASE_NEEDED} > git_rev
           echo "release_needed=${RELEASE_NEEDED}" >> $GITHUB_OUTPUT
-          echo "Need to release: ${RELEASE_NEEDED}" >> $GITHUB_STEP_SUMMARY
+          if [ RELEASE_NEEDED =~ "false" ]; then
+            msg="No Release needed..."
+          else
+            releases=$(python main.py True)
+            echo "Need to release: ${releases}" >> $GITHUB_STEP_SUMMARY
+            msg="Releasing: ${RELEASE_NEEDED}"
+          fi
+          echo $msg >> $GITHUB_STEP_SUMMARY
 
       - name: Save git rev
         if: steps.release_needed.outputs.release_needed != 'false'
@@ -35,10 +42,10 @@ jobs:
           name: git_rev
           path: ${{ github.workspace }}/git_rev
 
-      - name: Report all needed
-        if: steps.release_needed.outputs.release_needed != 'false'
-        run: |
-          echo "git_rev: $(python main.py True)" >> $GITHUB_STEP_SUMMARY
+      # - name: Report all needed
+      #   if: steps.release_needed.outputs.release_needed != 'false'
+      #   run: |
+      #     echo "git_rev: $(python main.py True)" >> $GITHUB_STEP_SUMMARY
 
 
   make_release:
