@@ -26,7 +26,7 @@ jobs:
           RELEASE_NEEDED=$(python main.py)
           echo ${RELEASE_NEEDED} > git_rev
           echo "release_needed=${RELEASE_NEEDED}" >> $GITHUB_OUTPUT
-          if [[ RELEASE_NEEDED =~ "false" ]]; then
+          if [[ $RELEASE_NEEDED =~ "false" ]]; then
             msg="No Release needed..."
           else
             releases=$(python main.py True)

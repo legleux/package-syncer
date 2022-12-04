@@ -87,7 +87,7 @@ def download_artifact(artifact_json):
     # breakpoint()
     # sha = name.split('-')[2]
     # return (artifact, sha)
-    print(f"Downloaded: {artifact}\n")
+    log.debug(f"Downloaded: {artifact}\n")
 
 
 def get_artifact_shas(url):
@@ -114,6 +114,7 @@ if __name__ == "__main__":
     for art in artifacts:
       download_artifact(art)
   else:
+    log.debug(f"Couldn't find {package} built from {git_rev} in {branch} branch")
     print(f"Couldn't find {package} built from {git_rev} in {branch} branch")
 
   # for info in pkg_shas:
