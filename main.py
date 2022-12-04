@@ -29,9 +29,9 @@ def check_releases_needed(repo=TARGET_REPO, git_rev=None, gh=False, print_all=Fa
     else:
         if(gh):
             if(print_all):
-                print(releases_found[0])
-            else:
                 print(releases_found)
+            else:
+                print(releases_found[0])
         else:
             print(releases_found) # log this
             return releases_found
