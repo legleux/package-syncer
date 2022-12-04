@@ -81,7 +81,7 @@ jobs:
         run: |
           git config --global user.email "auto@bot.com"
           git config --global user.name "Hot Rod"
-          git commit --allow-empty -m"${{ steps.git_rev.outputs.branch }}-${{ steps.git_rev.outputs.tag_name }}"
+          git commit --allow-empty -m"${{ steps.git_rev.outputs.tag_name }}"
           git push
 
       - name: Tag
