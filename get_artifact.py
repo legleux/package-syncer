@@ -50,10 +50,7 @@ def get_latest_artifact_urls(package, git_rev, branch):
   artifacts = [artifact for artifact in all_artifacts if artifact['name'] in pkg_names ]
   # breakpoint()
   a = [ a for a in artifacts if a['workflow_run']['head_sha'] == git_rev and a['workflow_run']['head_branch'] == branch]
-  if a:
-    return a
-  else:
-    sys.exit(f"Couldn't find {package} built from {git_rev} in {branch} branch")
+  return a
 
   # for i in a:
   #   print(i['archive_download_url'])
@@ -99,10 +96,12 @@ if __name__ == "__main__":
   artifacts = get_latest_artifact_urls(package, git_rev, branch)
   # breakpoint()
   pkg_shas = []
-
-  for art in artifacts:
+  if artifacts:
+    for art in artifacts:
     # pkg_shas.append(download_artifact(art))
-    download_artifact(art)
+      download_artifact(art)
+  else:
+  print(f"Couldn't find {package} built from {git_rev} in {branch} branch")
 
   # for info in pkg_shas:
   #   print(f"File: {info[0]}\nsha256: {info[1]}")
