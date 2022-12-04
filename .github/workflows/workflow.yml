@@ -70,11 +70,12 @@ jobs:
 
       - name: Get latest artifact
         run: |
+          PKG_NAME="clio_server"
           pip install requests python-dotenv
           GIT_REV=${{ steps.git_rev.outputs.git_rev }}
           SHORT_REV=${{ steps.git_rev.outputs.short_rev }}
           BRANCH=${{ steps.git_rev.outputs.branch }}
-          python get_artifact.py "${GIT_REV}" "${BRANCH}" >> $GITHUB_STEP_SUMMARY
+          python get_artifact.py "${PKG_NAME}" "${GIT_REV}" "${BRANCH}" >> $GITHUB_STEP_SUMMARY
 
       - name: Make commit
         run: |
