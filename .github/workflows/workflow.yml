@@ -107,7 +107,7 @@ jobs:
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
-          name: "Release ${{ steps.git_rev.outputs.tag_name }}"
+          name: "${{ steps.git_rev.outputs.tag_name }}"
           tag_name: ${{ steps.git_rev.outputs.tag_name }}
           files: |
             ${{ github.workspace }}/*.deb
