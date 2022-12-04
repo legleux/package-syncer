@@ -18,6 +18,10 @@ def get_gh_releases(repo):
     releases = json.loads(get(url, headers=headers).content)
     return releases
 
+
+def get_release_assets_shas(asset_url):
+  pass
+
 #for each release in package-syncer releases, there must be a corresponding package in artifactory:
 
 branch_map = {"nightly":"develop", "unstable":"release", "stable": "main"}

@@ -4,7 +4,7 @@ import json
 USERNAME = "XRPLF"
 REPOSITORY = "clio"
 USERNAME = "legleux"
-REPOSITORY = "test_repo"
+REPOSITORY = "clio"
 REPO=f"{USERNAME}/{REPOSITORY}"
 BRANCH = "develop"
 BRANCHES_URL = f"https://api.github.com/repos/{REPO}/branches"
@@ -30,6 +30,7 @@ def get_last_commits_from_target_branches():
     response = requests.get(BRANCHES_URL)
     res = response.content
     branches = json.loads(res)
+    # TODO: match release/x.y.z[-bN,-rcN] better
     branches = [branch for branch in branches if branch['name'] in ['develop', 'main'] or branch['name'].startswith('release')]
     shas = [(branch['name'], branch['commit']['sha']) for branch in branches]
     return shas

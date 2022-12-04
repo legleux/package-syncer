@@ -8,6 +8,7 @@ def check_releases_needed(repo=SOURCE_REPO, git_rev=None):
 
     source_repo_latest_commits = get_last_commits_from_target_branches()
     releases = get_gh_releases(repo)
+    # breakpoint()
     released_tags = [ release['tag_name'] for release in releases ]
     releases_found = []
 
@@ -26,6 +27,7 @@ def check_releases_needed(repo=SOURCE_REPO, git_rev=None):
     if not releases_found:
         print("false")
     else:
-        print(releases_found[0])
+        print(releases_found) # log this
+        # print(releases_found[0])
 
 check_releases_needed()
