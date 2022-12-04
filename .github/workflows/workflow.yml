@@ -26,7 +26,7 @@ jobs:
           RELEASE_NEEDED=$(python main.py)
           echo ${RELEASE_NEEDED} > git_rev
           echo "release_needed=${RELEASE_NEEDED}" >> $GITHUB_OUTPUT
-          echo "Need to release: ${RELEASE_NEEDED}" >> $GITHUB_SUMMARY
+          echo "Need to release: ${RELEASE_NEEDED}" >> $GITHUB_STEP_SUMMARY
 
       - name: Save git rev
         if: steps.release_needed.outputs.release_needed != 'false'
@@ -34,6 +34,12 @@ jobs:
         with:
           name: git_rev
           path: ${{ github.workspace }}/git_rev
+
+      - name: Save git rev
+        if: steps.release_needed.outputs.release_needed != 'false'
+        run: |
+          echo "git_rev: ${{ steps.release_needed.outputs.release_needed }}" >> $GITHUB_STEP_SUMMARY
+
 
   make_release:
     name: Create release

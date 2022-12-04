@@ -46,13 +46,17 @@ def get_latest_artifact_urls(package, git_rev, branch):
   pkg_names = [f"clio_{pkg_type}_packages" for pkg_type in ['rpm', 'deb']]
   found_pkg = False
   all_artifacts = get_artifacts(URL, 0)
+  breakpoint()
   artifacts = [artifact for artifact in all_artifacts if artifact['name'] in pkg_names ]
   # breakpoint()
   a = [ a for a in artifacts if a['workflow_run']['head_sha'] == git_rev and a['workflow_run']['head_branch'] == branch]
-  # breakpoint()
+  if a:
+    return a
+  else:
+    sys.exit(f"Couldn't find {package} built from {git_rev} in {branch} branch
+
   # for i in a:
   #   print(i['archive_download_url'])
-  return a
 
 
 def download_artifact(artifact_json):

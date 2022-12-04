@@ -4,7 +4,7 @@ from check_releases import get_gh_releases
 
 TARGET_REPO = "legleux/package-syncer"
 
-def check_releases_needed(repo=TARGET_REPO, git_rev=None, gh=False):
+def check_releases_needed(repo=TARGET_REPO, git_rev=None, gh=False, print_all=False):
 
     target_repo_latest_commits = get_last_commits_from_target_branches()
     releases = get_gh_releases(repo)
@@ -28,14 +28,18 @@ def check_releases_needed(repo=TARGET_REPO, git_rev=None, gh=False):
         print("false")
     else:
         if(gh):
-            print(releases_found[0])
+            if(print_all)
+                print(releases_found[0])
+            else:
+                print(releases_found)
         else:
             print(releases_found) # log this
             return releases_found
 
 if __name__ == "__main__":
-    check_releases_needed(gh=True)
-
+    if len(sys.argv > 1):
+        print_all = sys.argv[1] # TODO: argparse
+    check_releases_needed(gh=True, print_all=False)
 # Check which branches in <source_repo> do not have releases in <target_repo>:
 
 # releases_needed = check_releases_needed()
