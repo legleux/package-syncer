@@ -53,7 +53,7 @@ def get_latest_artifact_urls(package, git_rev, branch):
   if a:
     return a
   else:
-    sys.exit(f"Couldn't find {package} built from {git_rev} in {branch} branch
+    sys.exit(f"Couldn't find {package} built from {git_rev} in {branch} branch")
 
   # for i in a:
   #   print(i['archive_download_url'])
