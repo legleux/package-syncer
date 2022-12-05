@@ -44,12 +44,21 @@ def get_artifacts(url=URL, page=1):
   # r = get(dl_url, headers=headers, allow_redirects=True)
   return response['artifacts']
 
+def get_pages():
+    raw_response = get(URL, headers=headers)
+    response_headers = raw_response.headers['Link']
+    url  = response_headers.split(",")
+    url_string = url[1]
+    regex = "\?page=(\d+)>"
+    matches = re.search(regex,url_string)
+    return matches[1]
+
 
 def get_latest_artifact_urls(package, git_rev, branch, page=1):
   pkg_names = [f"clio_{pkg_type}_packages" for pkg_type in ['rpm', 'deb']]
   no_pkg_found = True
   page = 1
-  last_page = 10
+  last_page = get_pages()
   last_workflow_run = None
   while(no_pkg_found and page != last_page):
     log.debug(f"Checking page: {page}")
