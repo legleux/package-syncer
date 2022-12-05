@@ -54,12 +54,14 @@ def get_pages():
     return matches[1]
 
 
-def get_latest_artifact_urls(package, git_rev, branch, page=1):
+def get_latest_artifact_urls(package, git_rev, branch):
   pkg_names = [f"clio_{pkg_type}_packages" for pkg_type in ['rpm', 'deb']]
   no_pkg_found = True
   page = 1
-  last_page = get_pages()
+  last_page = int(get_pages())
+  log.debug(f"Found {last_page} pages of results.")
   last_workflow_run = None
+  log.debug(f"Searching for: package: {package}, with git_rev {git_rev} on branch {branch})")
   while(no_pkg_found and page != last_page):
     log.debug(f"Checking page: {page}")
     all_artifacts = get_artifacts(URL, page=page)
