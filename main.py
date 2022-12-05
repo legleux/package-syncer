@@ -40,13 +40,3 @@ if __name__ == "__main__":
     if len(sys.argv) > 1:
         print_all = sys.argv[1] # TODO: argparse
     check_releases_needed(gh=True, print_all=print_all)
-# Check which branches in <source_repo> do not have releases in <target_repo>:
-
-# releases_needed = check_releases_needed()
-# x = [pair for pair in [pair.split('_') for pair in releases_needed]]
-# # flatten
-# # # get the latest assets built from these branches/commits available from the source_repo:
-# x = [ i for sub in x for i in sub]
-# for branch, git_rev in zip(x[::2], x[1::2]):
-# # for branch, git_rev in zip(x[0::1],x[1::]):
-#     print(f"branch: {branch} git_rev: {git_rev}")

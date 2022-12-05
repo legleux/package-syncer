@@ -76,6 +76,21 @@ def get_latest_artifact_urls(package, git_rev, branch):
     page += 1
   return last_workflow_run
 
+def download_release_artifact(repo, tag, asset):
+    asset_url = f"https://github.com/{repo}/releases/download/{tag}/{asset}"
+    # log.info(f"Downloading {tag} - {asset}")
+    log.info(f"Asset url: {asset_url}")
+    try:
+      r = get(asset_url, headers=headers, allow_redirects=True)
+      if not r.ok:
+        breakpoint()
+      asset = open(asset, 'wb')
+      asset.write(r.content)
+      asset.close()
+    except Exception as e:
+      log.error("couldn't download release artifact")
+      log.error(e)
+      breakpoint()
 
 def download_artifact(artifact_json):
     dl_url = artifact_json['archive_download_url']
