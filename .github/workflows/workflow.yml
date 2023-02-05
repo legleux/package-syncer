@@ -35,11 +35,17 @@ jobs:
       #   if: steps.release_needed.outputs.release_needed != 'false'
       #   run: |
       #     echo "git_rev: $(python main.py True)" >> $GITHUB_STEP_SUMMARY
+      - name: Create info file
+        run: |
+          echo -e "ref: $GITHUB_REF \ncommit: $GITHUB_SHA\nbuild: $(date +"%Y-%m-%dT%H:%M:%SZ")" \
+          > info.txt
 
 
       - name: Make_release
         uses: pyTooling/Actions/releaser@r0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
+          tag: nightly
           files: |
             cool.deb
+            info.txt
