@@ -22,7 +22,7 @@ jobs:
       - name: Build package
         id: release_needed
         run: |
-         touch cool.deb
+         echo "yay" > cool.deb
 
       - name: Save artifact
         # if: steps.release_needed.outputs.release_needed != 'false'
