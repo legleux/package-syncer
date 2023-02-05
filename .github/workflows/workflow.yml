@@ -37,9 +37,9 @@ jobs:
       #     echo "git_rev: $(python main.py True)" >> $GITHUB_STEP_SUMMARY
 
 
-make_release:
-  - uses: pyTooling/Actions/releaser@r0
-    with:
-      token: ${{ secrets.GITHUB_TOKEN }}
-      files: |
-        cool.deb
+      - name: Make_release
+        uses: pyTooling/Actions/releaser@r0
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          files: |
+            cool.deb
