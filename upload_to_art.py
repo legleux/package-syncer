@@ -15,8 +15,8 @@ def upload_package(url, pkg):
     fileName = pkg
     filePath = os.path.abspath(fileName)
     headers = {'Content-type': 'application/octet-stream', 'Slug': fileName}
-    breakpoint()
     resp = requests.put(url, data=open(filePath, 'rb'), headers=headers, auth=(USER, PASSWORD))
+    # breakpoint()
     return json.loads(resp.content)
 
 
@@ -37,13 +37,17 @@ def upload_rpm(args):
 
 ## args pkg, compoenent, git_ref
 def upload_package_to_artifactory(args):
-
   pkg = args[0]
-  if pkg.endswith(".deb"):
-    result = upload_dpkg(args)
-  elif pkg.endswith(".rpm"):
-    result = upload_rpm(args)
+  try:
+    if pkg.endswith(".deb"):
+      result = upload_dpkg(args)
+    elif pkg.endswith(".rpm"):
+      result = upload_rpm(args)
+  except Exception as e:
+    print(f"error: {e}")
+
   return result
 
+
 if __name__ == "__main__":
-  upload_package_to_artifactory(sys.argv[1:])
+  print(upload_package_to_artifactory(sys.argv[1:]))

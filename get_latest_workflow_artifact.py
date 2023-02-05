@@ -1,39 +1,33 @@
 import requests
 import subprocess
-
-PACKAGE_NAME = "clio_deb_packages"
+PAT_TOKEN="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"
+PACKAGE_NAME = "clio_rpm_packages"
 headers = {
     "Accept": "application/vnd.github+json",
-    # "Authorization" : f"Bearer {PAT_TOKEN}",
+    "Authorization" : f"Bearer {PAT_TOKEN}",
     "X-GitHub-Api-Version" : "2022-11-28"
 }
 OWNER = "legleux"
 REPO = "clio"
 
+def get_artifact(branch):
+    s = requests.Session()
+    s.headers.update(headers)
+    URL = f"https://api.github.com/repos/{OWNER}/{REPO}/actions/artifacts"
+    result = s.get(URL) # , json=body)
+    data = result.json()
+    artifacts = data['artifacts']
+    develop_artifacts = [artifact for artifact in artifacts if artifact['workflow_run']['head_branch'] == branch and artifact['name'] == PACKAGE_NAME]
+    art = develop_artifacts[0]
+    breakpoint()
+    dl_url = art['archive_download_url']
+    name = art['name']
+    redir = s.get(dl_url, allow_redirects=False)
 
-
-s = requests.Session()
-s.headers.update(headers)
-URL = f"https://api.github.com/repos/{OWNER}/{REPO}/actions/artifacts"
-result = s.get(URL) # , json=body)
-data = result.json()
-breakpoint()
-# URL = "https://api.github.com/repos/XRPLF/clio/actions/artifacts/539216767/zip"
-# result = s.get(URL)
-artifacts = data['artifacts']
-develop_artifacts = [artifact for artifact in artifacts if artifact['workflow_run']['head_branch'] == 'develop' and artifact['name'] == PACKAGE_NAME]
-# for art in develop_artifacts:
-#     dl_url = art['archive_download_url']
-#     name =  art['name']
-#     print(f"{name}  {dl_url}")
-art = develop_artifacts[0]
-dl_url = art['archive_download_url']
-filename = art['name']
-# breakpoint()
-r = s.get(dl_url, headers=headers, allow_redirects=True)
-zip_file = open(f"{filename}.zip", 'wb')
-zip_file.write(r.content)
-zip_file.close()
-# o = subprocess.check_output(['unzip', filename])
-# zip_output = o.decode()
-# print(zip_output)
+    filename = art['name']
+    dl_url = redir.headers['Location']
+    r = s.get(dl_url, headers=headers, allow_redirects=True)
+    zip_file = open(f"{filename}.zip", 'wb')
+    zip_file.write(r.content)
+    zip_file.close()
+    return filename, art['workflow_run']['head_sha']
