@@ -8,13 +8,13 @@ on:
 
 
 jobs:
-  release_needed:
-    name: Check if need to release
+  build_package:
+    name: Build packages
     runs-on: ubuntu-latest
-    outputs:
-      release_needed: ${{ steps.release_needed.outputs.release_needed }}
-    env:
-      PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
+    # outputs:
+    #   release_needed: ${{ steps.release_needed.outputs.release_needed }}
+    # env:
+    #   PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -29,7 +29,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: cool.deb
-          # path: ${{ github.workspace }}/git_rev
+          path: cool.deb
 
       # - name: Report all needed
       #   if: steps.release_needed.outputs.release_needed != 'false'
