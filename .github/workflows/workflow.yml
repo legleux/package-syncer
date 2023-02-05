@@ -19,29 +19,17 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Check if release needed
+      - name: Build package
         id: release_needed
         run: |
-          pip install python-dotenv
-          RELEASE_NEEDED=$(python main.py)
-          echo ${RELEASE_NEEDED} > git_rev
-          echo "release_needed=${RELEASE_NEEDED}" >> $GITHUB_OUTPUT
-          if [[ $RELEASE_NEEDED =~ "false" ]]; then
-            msg="No Release needed..."
-          else
-            releases=$(python main.py True)
-            echo "Need to release:" >> $GITHUB_STEP_SUMMARY
-            echo "${releases}" >> $GITHUB_STEP_SUMMARY
-            msg="Releasing: ${RELEASE_NEEDED}"
-          fi
-          echo $msg >> $GITHUB_STEP_SUMMARY
+         touch cool.deb
 
-      - name: Save git rev
-        if: steps.release_needed.outputs.release_needed != 'false'
+      - name: Save artifact
+        # if: steps.release_needed.outputs.release_needed != 'false'
         uses: actions/upload-artifact@v3
         with:
-          name: git_rev
-          path: ${{ github.workspace }}/git_rev
+          name: cool.deb
+          # path: ${{ github.workspace }}/git_rev
 
       # - name: Report all needed
       #   if: steps.release_needed.outputs.release_needed != 'false'
@@ -49,67 +37,9 @@ jobs:
       #     echo "git_rev: $(python main.py True)" >> $GITHUB_STEP_SUMMARY
 
 
-  make_release:
-    name: Create release
-    runs-on: ubuntu-latest
-    needs: release_needed
-    if: needs.release_needed.outputs.release_needed != 'false'
-    env:
-      PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
-    steps:
-
-      - name: Checkout
-        uses: actions/checkout@v2
-
-      - name: Get git_rev file
-        uses: actions/download-artifact@v3
-        with:
-          name: git_rev
-
-      - name: Set variables git rev, branch name
-        id: git_rev
-        run: |
-          git_rev=$(cat git_rev)
-          echo "git_rev contains: ${git_rev}"
-          IFS=_ read -r branch git_rev <<< $git_rev
-          short_rev=${git_rev:0:8}
-          echo "branch: ${branch}"
-          echo "git_rev: ${git_rev}"
-          echo "branch=${branch}" >> $GITHUB_OUTPUT
-          echo "git_rev=${git_rev}" >> $GITHUB_OUTPUT
-          echo "short_rev=${short_rev}" >> $GITHUB_OUTPUT
-          echo "tag_name=${branch}_${short_rev}" >> $GITHUB_OUTPUT
-          output=$(cat ${GITHUB_OUTPUT})
-          echo "GITHUB_OUTPUT: ${output}"
-
-      - name: Get latest artifact
-        run: |
-          PKG_NAME="clio_server"
-          pip install requests python-dotenv
-          GIT_REV=${{ steps.git_rev.outputs.git_rev }}
-          SHORT_REV=${{ steps.git_rev.outputs.short_rev }}
-          BRANCH=${{ steps.git_rev.outputs.branch }}
-          python get_artifact.py "${PKG_NAME}" "${GIT_REV}" "${BRANCH}" >> $GITHUB_STEP_SUMMARY
-
-      - name: Make commit
-        run: |
-          git config --global user.email "auto@bot.com"
-          git config --global user.name "Hot Rod"
-          git commit --allow-empty -m"${{ steps.git_rev.outputs.tag_name }}"
-          git push
-
-      - name: Tag
-        uses: avakar/tag-and-release@v1
-        with:
-          tag_name: ${{ steps.git_rev.outputs.tag_name }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Release
-        uses: softprops/action-gh-release@v1
-        with:
-          name: "${{ steps.git_rev.outputs.tag_name }}"
-          tag_name: ${{ steps.git_rev.outputs.tag_name }}
-          files: |
-            ${{ github.workspace }}/*.deb
-            ${{ github.workspace }}/*.rpm
+make_release:
+  - uses: pyTooling/Actions/releaser@r0
+    with:
+      token: ${{ secrets.GITHUB_TOKEN }}
+      files: |
+        cool.deb
